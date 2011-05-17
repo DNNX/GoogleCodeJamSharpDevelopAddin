@@ -14,4 +14,10 @@ TODO:
 ### Writing Solution ###
 TODO:
 
-TODO: License
+### License ###
+
+Copyright (c) 2011 Viktar Basharymau 
+twitter.com/DNNX 
+%w(viktar.basharymau gmail.com) * "@"
+
+Released under the MIT license. See LICENSE file for details.
