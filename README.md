@@ -14,15 +14,21 @@ GoogleCodeJamSharpDevelopAddin is an add-in for [SharpDevelop IDE](http://sharpd
 3. Rename GoogleCodeJamSharpDevelopAddin.zip to GoogleCodeJamSharpDevelopAddin.sdaddin.
 4. Double-click GoogleCodeJamSharpDevelopAddin.sdaddin and confirm installation.
 
-
 ### Basic Usage ###
-TODO: 
+1. Start SharpDevelop.
+2. Go to File -> Create New Project.
+3. Choose "Google Code Jam Solution Project" under C# / Windows Applications.
+4. Specify project name. I usually use name of a problem I'm going to solve.
+5. Click "Create".
+
+New solution template will be created with unit tests. Now you ready to create a test based on sample input/output from the problem.
 
 ### Running Tests ###
-TODO: 
+1. Go to View -> Tools -> Unit Tests.
+2. In a new pad, click "Run all tests" button. Of cource, all the tests will be red.
 
 ### Writing Solution ###
-TODO:
+Just open %PROBLEM_NAME%.cs file and override 2 methods: ReadTestCase and Solve. The first one reads/parses single test case from an input stream, the second one solves that case.
 
 ### License ###
 
