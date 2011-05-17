@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<Template originator = "Viktar Basharymau">
+	
+	<!-- Template Header -->
+	<TemplateConfiguration>
+		<Name>Google Code Jam Solution Project</Name>
+		<Category>C#</Category>
+		<Subcategory>${res:Templates.File.Categories.WindowsApplications}</Subcategory>
+		<Icon>C#.Project.DOSProject</Icon>
+		<Description>Solution for Google Code Jam problem. See http://code.google.com/codejam/</Description>
+		<SupportedTargetFrameworks>v3.5Client;v4.0</SupportedTargetFrameworks><!--TODO: fix-->
+	</TemplateConfiguration>
+	
+	<!-- Actions -->
+	<Actions>
+		<Open filename = "${ProjectName}.cs"/>
+	</Actions>
+	
+	<!-- Template Content -->
+	<Project language = "C#">
+		<ProjectItems>
+			<Reference Include="System" />
+			<Reference Include="System.Core" />
+			<Reference Include="NUnit.Framework">
+				<HintPath>$(SharpDevelopBinPath)\Tools\NUnit\NUnit.Framework.dll</HintPath>
+			</Reference>
+		</ProjectItems>
+		
+		<PropertyGroup>
+			<OutputType>Exe</OutputType>
+			<AppDesignerFolder>Properties</AppDesignerFolder>
+		</PropertyGroup>
+		<Files>
+			<File name="${ProjectName}.cs"><![CDATA[using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using DNNX.GoogleCodeJam.Common;
+
+namespace DNNX.GoogleCodeJam.${ProjectName}
+{
+    public class ${ProjectName} : Solution<int[]>
+    {
+        public ${ProjectName}(TextReader input, TextWriter output)
+            : base(input, output)
+        {
+        }
+        
+        public ${ProjectName}() {}
+        
+        public override object Solve(int[] a)
+        {
+            return null;
+        }
+        
+        public override int[] ReadTestCase()
+        {
+            return null;
+        }
+    
+        public static void Main(string[] args)
+        {
+            new ${ProjectName}().REPL();
+            Console.ReadLine();
+        }    
+    }
+}]]></File>
+			<File name="${ProjectName}Test.cs"><![CDATA[using System;
+using System.IO;
+using NUnit.Framework;
+using DNNX.GoogleCodeJam.Common;
+
+namespace DNNX.GoogleCodeJam.${ProjectName}.Test
+{
+    [TestFixture]
+    public class ${ProjectName}Test : BaseTest<int[]>
+    {
+        [Test]
+        public void SmokeTest()
+        {
+            var input = @"PASTE INPUT DATA HERE";
+            
+            var expectedOutput = @"PASTE OUTPUT DATA HERE (like below):
+Case #1: NO
+Case #2: 11";
+
+            SmokeTest(input, expectedOutput);
+        }
+        
+        [Test]
+        public void EdgeCase()
+        {
+            Assert.AreEqual("xxx", CreateSolution().Solve(new[] {1}));
+        }
+        
+        
+        protected override Solution<int[]> CreateSolution(TextReader input, TextWriter output)
+        {
+            return new ${ProjectName}(input, output);
+        }
+    }
+}]]></File>
+<!-- TODO: move to separate file -->
+		<File name="Solution.cs"><![CDATA[using System;
+using System.IO;
+using System.Linq;
+
+namespace DNNX.GoogleCodeJam.Common
+{
+    public abstract class Solution<TTestCase>
+    {
+        private readonly TextReader _input;
+        private readonly TextWriter _output;
+        
+        protected Solution() : this(Console.In, Console.Out)
+        {
+        }
+
+        protected Solution(TextReader input, TextWriter output)
+        {
+            _input = input;
+            _output = output;
+        }
+        
+        protected string ReadString()
+        {
+            return _input.ReadLine().Trim();
+        }
+        
+        protected int ReadInt()
+        {
+            return int.Parse(ReadString());
+        }
+
+        protected int[] ReadInts()
+        {
+            return ReadString().Split(' ').Select(int.Parse).ToArray();
+        }
+        
+        public abstract TTestCase ReadTestCase();
+        
+        public abstract object Solve(TTestCase testCase);
+        
+        /// <summary>
+        /// Read-eval-print loop
+        /// http://en.wikipedia.org/wiki/REPL
+        /// </summary>
+        public void REPL()
+        {
+            int numberOfTests = ReadInt();
+            var tests = new TTestCase[numberOfTests];
+            for (int i=0; i<numberOfTests; ++i)
+            {
+                tests[i] = ReadTestCase();
+            }
+            
+            var answers = tests
+                        .AsParallel()
+                        .Select(Solve)
+                        .ToArray();
+            
+            for (int i=0; i<numberOfTests; ++i)
+            {
+                _output.WriteLine("Case #{0}: {1}", i+1, answers[i]);
+            }
+        }
+    }
+    
+    public abstract class Solution<T1, T2> : Solution<Tuple<T1, T2>>
+    {
+        public override object Solve(Tuple<T1, T2> testCase)
+        {
+            return Solve(testCase.Item1, testCase.Item2);
+        }
+        
+        public abstract object Solve(T1 arg1, T2 arg2);
+    }
+}
+]]></File>
+<!-- TODO: move to separate file -->
+		<File name="BaseTest.cs"><![CDATA[using System;
+using System.IO;
+using NUnit.Framework;
+
+namespace DNNX.GoogleCodeJam.Common
+{
+    public abstract class BaseTest<TTestCase>
+    {
+        protected abstract Solution<TTestCase> CreateSolution(TextReader input, TextWriter output);
+
+        protected Solution<TTestCase> CreateSolution()
+        {
+            return CreateSolution(null, null);
+        }
+        
+        protected void SmokeTest(string input, string expectedOutput)
+        {
+            var inputReader = new StringReader(input.Trim());
+            var outputWriter = new StringWriter();
+            var solution = CreateSolution(inputReader, outputWriter);
+            
+            solution.REPL();
+           
+            var actual = outputWriter.ToString().Trim();
+            Assert.AreEqual(expectedOutput.Trim(), actual);            
+        }
+        
+    }
+}]]></File>
+		</Files>
+	</Project>
+</Template>
