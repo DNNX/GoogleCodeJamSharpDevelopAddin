@@ -100,8 +100,8 @@ Case #2: 11";
         }
     }
 }]]></File>
-			<File name="Solution.cs" src="Solution.cs" />
-			<File name="BaseTest.cs" src="BaseTest.cs" />
+			<File name="Common\Solution.cs" src="Common\Solution.cs" />
+			<File name="Common\BaseTest.cs" src="Common\BaseTest.cs" />
 		</Files>
 	</Project>
 </Template>
